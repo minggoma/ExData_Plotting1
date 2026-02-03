@@ -1,0 +1,98 @@
+---
+title: "plot4"
+author: "AM"
+date: "2026-02-03"
+output: html_document
+---
+
+
+#Read in cleaned data
+```{r}
+df <- read.csv("cleaneddata.csv")
+library(lubridate)
+
+#Need to combined the date and the time into one object
+df$datetime <- ymd_hms(df$datetime)
+```
+
+
+Plot 4
+```{r}
+#2 of the plots I've already generated
+#Now to generate the other 2
+
+#Voltage vs. datetime
+
+with(df, plot(datetime, voltage,
+              type = "n", #don't plot the pch
+              xaxt = "n", #don't plot the axis; to specify below
+              xlab = "datetime",
+              ylab = "Voltage"))
+lines(df$datetime, df$voltage, col = "black")
+axis(side = 1, at = pretty(df$datetime), labels = c("Thu", "", "Fri", "", "Sat"))
+
+#Global reactive power. vs datetime
+with(df, plot(datetime, global_reactive_power,
+              xlab = "datetime",
+              ylab = "Global_reactive_power",
+              type = "n",
+              xaxt = "n"))
+lines(df$datetime, df$global_reactive_power, col = "black")
+axis(side = 1, at = pretty(df$datetime), labels = c("Thu", "", "Fri", "", "Sat"))
+```
+
+
+```{r}
+
+par(mfcol = c(2, 2),
+    mar = c(4, 4, 2, 1))
+
+with(df, plot(datetime, global_active_power,
+              xlab = "",
+              ylab = "Global Active Power (kilowatts)",
+              type = "n", #Don't plot any points
+              xaxt = "n")) #Don't plot the native axis, specified below
+
+lines(df$datetime, df$global_active_power, col = "black") #Just add the line
+#Add the axis so it's just showing at thursday, friday, and saturday
+axis(side = 1, at = pretty(df$datetime), labels = c("Thu", "", "Fri", "", "Sat"))
+
+with(df, plot(datetime, sub_metering_1,
+              xlab = "",
+              ylab = "Energy sub metering",
+              xaxt = "n",
+              type = "n"))
+
+#Add sub_metering_1
+lines(df$datetime, df$sub_metering_1, col = "black")
+
+#Add sub_metering_2
+lines(df$datetime, df$sub_metering_2, col = "red")
+
+#Add sub_metering_3
+lines(df$datetime, df$sub_metering_3, col = "blue")
+
+#Add axis
+axis(side = 1, at = pretty(df$datetime), labels = c("Thu", "", "Fri", "", "Sat"))
+
+with(df, plot(datetime, voltage,
+              type = "n", #don't plot the pch
+              xaxt = "n", #don't plot the axis; to specify below
+              xlab = "datetime",
+              ylab = "Voltage"))
+lines(df$datetime, df$voltage, col = "black")
+axis(side = 1, at = pretty(df$datetime), labels = c("Thu", "", "Fri", "", "Sat"))
+
+#Global reactive power. vs datetime
+with(df, plot(datetime, global_reactive_power,
+              xlab = "datetime",
+              ylab = "Global_reactive_power",
+              type = "n",
+              xaxt = "n"))
+lines(df$datetime, df$global_reactive_power, col = "black")
+axis(side = 1, at = pretty(df$datetime), labels = c("Thu", "", "Fri", "", "Sat"))
+
+dev.copy(png, file = "plot4.png", width = 480, height = 480)
+dev.off()
+
+```
